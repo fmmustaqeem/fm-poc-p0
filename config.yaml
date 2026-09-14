@@ -1,0 +1,72 @@
+version: "1.0.0"
+
+paths:
+  input: "input/"
+  quarantine: "quarantine/"
+  output: "output/"
+  logs: "logs/"
+  audit: "audit/"
+  manifests: "manifests/"
+
+input:
+  allowed_extensions: [".xlsx", ".csv"]
+  header_row: 0
+  encoding: "utf-8"
+
+structural:
+  required_columns: ["id", "date", "amount", "category"]
+  column_dtypes:
+    id: "string"
+    date: "date"
+    amount: "float"
+    category: "string"
+
+business:
+  not_null: ["id", "date", "amount"]
+  unique: ["id"]
+  range:
+    amount: {min: 0, max: 10000000}
+  allowed_values:
+    category: ["A", "B", "C", "D"]
+  regex: {}
+
+processing:
+  idempotency:
+    enabled: true
+  retry:
+    enabled: true
+  on_invalid_file: "quarantine"
+
+output:
+  filename_pattern: "consolidated_{run_id}_{timestamp}.xlsx"
+  timestamp_format: "%Y%m%d_%H%M%S"
+  sheets:
+    data: "Data"
+    summary: "Summary"
+  summary_columns:
+    - "rows_received"
+    - "rows_accepted"
+    - "rows_rejected"
+    - "files_processed"
+    - "files_rejected"
+    - "runtime_seconds"
+
+manifest:
+  include_fields:
+    - "run_id"
+    - "timestamp"
+    - "config_version"
+    - "code_version"
+    - "input_files"
+    - "file_hashes"
+    - "rows_received"
+    - "rows_accepted"
+    - "rows_rejected"
+    - "status"
+    - "output_path"
+    - "audit_path"
+    - "log_path"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)s | %(message)s"
