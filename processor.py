@@ -65,11 +65,11 @@ def process_run(validated_files, config, mode):
         file_hash = _sha256(path)
         hashes[str(path)] = file_hash
         input_files.append(str(path))
-        received += result["rows_received"]
         if mode == "dry-run":
             if result["file_status"] == "reject":
                 files_rejected += 1
             else:
+                received += result["rows_received"]
                 accepted += result["rows_accepted"]; rejected += result["rows_rejected"]
             continue
         if file_hash in seen:
@@ -79,6 +79,7 @@ def process_run(validated_files, config, mode):
         if file_hash in processed:
             logger.info("already processed (hash match): %s", path.name)
             continue
+        received += result["rows_received"]
         if result["file_status"] == "reject":
             files_rejected += 1
             reason = result["reason"]
