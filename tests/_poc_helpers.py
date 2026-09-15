@@ -45,7 +45,10 @@ def write_csv(path, rows=ROWS, columns=("id", "date", "amount", "category")):
                 row[0] = row[0] + offset
     if len(columns) < len(rows[0]):
         rows = [row[:len(columns)] for row in rows]
-    pd.DataFrame(rows, columns=columns).to_csv(path, index=False)
+    df = pd.DataFrame(rows, columns=columns)
+    if "id" in df.columns:
+        df["id"] = df["id"].astype(str)
+    df.to_csv(path, index=False)
 
 
 def validate(path, c):
