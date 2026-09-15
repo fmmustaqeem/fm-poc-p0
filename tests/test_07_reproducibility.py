@@ -11,7 +11,7 @@ def test_reproducibility(tmp_path, monkeypatch):
         results.append((run([validate(p,c) for p in sorted(Path("input").iterdir())],c), c))
     a=load_workbook(results[0][0]["output_path"],data_only=True); b=load_workbook(results[1][0]["output_path"],data_only=True)
     for sheet in ("Data","Summary"):
-        av=list(a[sheet].values); bv=list(b[sheet].values)
+        av=[list(row) for row in a[sheet].values]; bv=[list(row) for row in b[sheet].values]
         if sheet=="Summary":
             av[1][-1]=bv[1][-1]=None
         assert av==bv
