@@ -9,6 +9,8 @@ def test_retry(tmp_path, monkeypatch):
     files=[validate(p,c) for p in sorted(Path("input").iterdir())]
     first=run(files,c); old=read_json(first["manifest_path"]); old_output=Path(first["output_path"])
     bad.unlink(); fixed=Path("input/file_10_fixed.csv"); write_csv(fixed)
+    # Keep the same valid fixture data while ensuring the replacement has a new hash.
+    fixed.write_text(fixed.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     current=[validate(p,c) for p in sorted(Path("input").iterdir())]
     second=run(current,c); m=read_json(second["manifest_path"]); log=Path(second["log_path"]).read_text()
     assert m["rows_received"]==5 and m["rows_accepted"]==5
