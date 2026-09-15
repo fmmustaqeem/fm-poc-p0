@@ -28,4 +28,4 @@ def build_report(consolidated_rows, summary, config, run_id):
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
         df.to_excel(writer, sheet_name=config["output"]["sheets"]["data"], index=False)
         summary_df.to_excel(writer, sheet_name=config["output"]["sheets"]["summary"], index=False)
-    return str(output)
+    return str(output.resolve())
