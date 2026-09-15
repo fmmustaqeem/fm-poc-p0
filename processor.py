@@ -51,8 +51,9 @@ def process_run(validated_files, config, mode):
     log_path = Path(config["paths"]["logs"]) / f"{run_id}.log"
     logging.basicConfig(level=getattr(logging, config["logging"]["level"]), format=config["logging"]["format"], force=True)
     handler = logging.FileHandler(log_path, encoding="utf-8")
+    handler.setFormatter(logging.Formatter(config["logging"]["format"]))
     logger = logging.getLogger(f"p0-{run_id}")
-    logger.handlers.clear(); logger.setLevel(logging.INFO); logger.addHandler(handler)
+    logger.handlers.clear(); logger.setLevel(logging.INFO); logger.propagate = False; logger.addHandler(handler)
 
     processed = _load_processed(config) if config["processing"]["idempotency"]["enabled"] else {}
     seen = set(); rows = []; hashes = {}; input_files = []
