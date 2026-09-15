@@ -35,6 +35,8 @@ def config_from_source():
 
 
 def write_csv(path, rows=ROWS, columns=("id", "date", "amount", "category")):
+    if len(columns) < len(rows[0]):
+        rows = [row[:len(columns)] for row in rows]
     pd.DataFrame(rows, columns=columns).to_csv(path, index=False)
 
 
