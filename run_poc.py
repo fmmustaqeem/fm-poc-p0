@@ -9,8 +9,11 @@ from processor import process_run
 from validator import validate_file
 
 
+BASE_DIR = Path(__file__).resolve().parent
+
+
 def load_config():
-    with open("config.yaml", encoding="utf-8") as f:
+    with open(BASE_DIR / "config.yaml", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
