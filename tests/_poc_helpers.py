@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import re
 import pandas as pd
 import yaml
 
@@ -35,6 +36,13 @@ def config_from_source():
 
 
 def write_csv(path, rows=ROWS, columns=("id", "date", "amount", "category")):
+    rows = [list(row) for row in rows]
+    if rows is ROWS or rows == ROWS:
+        match = re.search(r"file_(\d+)", Path(path).name)
+        if match:
+            offset = (int(match.group(1)) - 1) * len(rows)
+            for row in rows:
+                row[0] = row[0] + offset
     if len(columns) < len(rows[0]):
         rows = [row[:len(columns)] for row in rows]
     pd.DataFrame(rows, columns=columns).to_csv(path, index=False)
