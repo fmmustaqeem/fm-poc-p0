@@ -104,7 +104,7 @@ def process_run(validated_files, config, mode):
         status = "success" if files_rejected == 0 else "partial"
         summary = {"rows_received":received,"rows_accepted":accepted,"rows_rejected":rejected,"files_processed":files_processed,"files_rejected":files_rejected,"runtime_seconds":round(time.time()-start, 6)}
         output_path = build_report(rows, summary, config, run_id)
-        manifest = {"run_id":run_id,"timestamp":timestamp,"config_version":config["version"],"code_version":CODE_VERSION,"input_files":input_files,"file_hashes":hashes,"rows_received":received,"rows_accepted":accepted,"rows_rejected":rejected,"status":status,"output_path":output_path,"audit_path":str(Path(config["paths"]["audit"])/f"{run_id}.json"),"log_path":str(log_path)}
+        manifest = {"run_id":run_id,"timestamp":timestamp,"config_version":config["version"],"code_version":CODE_VERSION,"input_files":input_files,"file_hashes":hashes,"rows_received":received,"rows_accepted":accepted,"rows_rejected":rejected,"files_processed":files_processed,"files_rejected":files_rejected,"status":status,"output_path":output_path,"audit_path":str(Path(config["paths"]["audit"])/f"{run_id}.json"),"log_path":str(log_path)}
         manifest_path = Path(config["paths"]["manifests"]) / f"{run_id}.json"
         manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         audit_path = Path(manifest["audit_path"])
