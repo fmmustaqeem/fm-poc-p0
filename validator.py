@@ -6,7 +6,7 @@ import pandas as pd
 def _load_file(path, config):
     suffix = Path(path).suffix.lower()
     if suffix == ".csv":
-        return pd.read_csv(path, header=config["input"]["header_row"], encoding=config["input"]["encoding"])
+        return pd.read_csv(path, header=config["input"]["header_row"], encoding=config["input"]["encoding"], dtype={"id": "string"})
     if suffix in (".xlsx", ".xls"):
         return pd.read_excel(path, header=config["input"]["header_row"])
     raise ValueError(f"unsupported extension: {suffix}")
